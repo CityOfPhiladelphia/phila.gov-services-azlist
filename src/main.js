@@ -29,7 +29,7 @@ async function getAzList() {
       return {
         title: item.title,
         link: item.link,
-        desc: !item.desc && '',
+        desc: item.desc,
         categories
       }
     })
@@ -55,4 +55,5 @@ async function initAzList() {
 }
 
 initAzList()
+
 

@@ -1,80 +1,81 @@
 <template>
-  <div id="azlist-component">
-    <div class="search-filter" v-if="options.searchBox">
-      <input type="text" v-model="options.searchValue" :placeholder="options.labels.searchPlaceholder" @keyup="updateResultsList()">
+  <div class="row">
+    <div class="medium-7 columns show-for-medium filter" data-desktop-filter-wrapper="">
+      <h2 class="h4 mtn">{{ options.labels.filterByText }}</h2> 
+      <form>
+        <ul class="no-bullet pan">
+          <li>
+            <input id="all" type="checkbox" @change="uncheckAllCheckboxes();updateResultsList()" :checked="defaultCheckboxChecked">
+            <label for="all">{{ options.labels.defaultCheckboxLabel }}</label>
+          </li>
+          <li v-for="listItem in categories" :key="listItem.slug" >
+            <input type="checkbox" :value="listItem.slug" :id="listItem.slug" v-model="checkedItems" @change="updateResultsList()">
+            <label :for="listItem.slug">{{ listItem.name }}</label>
+          </li>
+        </ul>
+      </form>
     </div>
-    <div v-if="options.azAnchors && options.azGroup" class="az-anchors">
-      <ul>
-        <li v-for="letter in alphabetLetters" :key="letter">
-          <a href="#" v-scroll-to="'#l-' + letter" :disabled="isLetterInResults(letter)">{{ letter }}</a>
-        </li>
-      </ul>
-    </div>
-    <div class="checkboxes-filter">
-      {{ options.labels.filterByText }}
-      <ul>
-        <li>
-          <input id="all" type="checkbox" @change="uncheckAllCheckboxes();updateResultsList()" :checked="defaultCheckboxChecked">
-          <label for="all">{{ options.labels.defaultCheckboxLabel }}</label>
-        </li>
-        <li v-for="listItem in categories" :key="listItem.slug" >
-          <input type="checkbox" :value="listItem.slug" :id="listItem.slug" v-model="checkedItems" @change="updateResultsList()">
-          <label :for="listItem.slug">{{ listItem.name }}</label>
-        </li>
-      </ul>
-    </div>
-    <div class="results">
-      <h2>Results</h2>
-      <template v-if="hasResults()">
-        <template v-if="options.azGroup">
-          <div v-for="(list, letter) in resultsList" :key="letter">
-            <div class="letter-block" :id="'l-' + letter">
-              <div class="letter">
-                {{ letter }}
-              </div>
-              <div v-for="(listItem, index) in list" :key="'g-' + letter + index">
-                <a :href="listItem.link">{{ listItem.title }}</a>
-                <p>{{ listItem.desc }}</p>
+    <div id="a-z-filter-list" class="medium-16 columns results a-z-list">
+      <div class="search" v-if="options.searchBox">
+        <input class="search-field" type="text" v-model="options.searchValue" :placeholder="options.labels.searchPlaceholder" @keyup="updateResultsList()" v-on:keydown.enter.prevent="">
+      </div>
+      <nav class="show-for-medium" v-if="options.azAnchors && options.azGroup">
+        <ul class="inline-list mbm pan mln h4">
+          <li v-for="letter in alphabetLetters" :key="letter">
+            <a href="#" v-scroll-to="getScrollToSettings(letter)" :disabled="isLetterInResults(letter)" :aria-disabled="isLetterInResults(letter)">{{ letter }}</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="list">
+        <template v-if="hasResults()">
+          <template v-if="options.azGroup">
+            <div v-for="(list, letter) in resultsList" :key="letter">
+              <div class="row collapse a-z-group">
+                <hr :id="'l-' + letter" class="letter separator" :data-alphabet="letter">
+                <div class="small-20 medium-24 columns">
+                  <div class="small-21 columns result mvm">
+                    <div v-for="(listItem, index) in list" :key="'g-' + letter + index">
+                      <a :href="listItem.link">{{ listItem.title }}</a>
+                      <p class="hide-for-small-only mbl">{{ listItem.desc }}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </template>
+          <template v-else>
+            <div class="small-20 medium-24 columns">
+              <div v-for="(listItem, lIndex) in resultsList" :key="'l-' + lIndex">
+                <a :href="listItem.link">{{ listItem.title }}</a>
+                <p class="hide-for-small-only mbl">{{ listItem.desc }}</p>
+              </div>
+            </div>
+          </template>
         </template>
         <template v-else>
-          <div v-for="(listItem, lIndex) in resultsList" :key="'l-' + lIndex">
-            <a :href="listItem.link">{{ listItem.title }}</a>
-            <p>{{ listItem.desc }}</p>
-          </div>
-        </template>  
-      </template>
-      <template v-else>
-        {{ options.labels.noResultsMsg }}
-      </template>
+          <div class="nothing-found h3">{{ options.labels.noResultsMsg }}</div>
+        </template>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import VueFuse from 'vue-fuse'
+
 import Vue from 'vue'
 import VueScrollTo from 'vue-scrollto'
 import deepMerge from 'lodash/merge'
+import Fuse from 'fuse.js'
 
+Vue.prototype.$search = function (term, list, options) {
+  return new Promise(function (resolve, reject) {
+    var run = new Fuse(list, options)
+    var results = run.search(term)
+    resolve(results)
+  })
+}
 
-Vue.use(VueScrollTo, {
-  container: "body",
-  duration: 1000,
-  easing: "ease",
-  offset: 0,
-  force: true,
-  cancelable: true,
-  onStart: false,
-  onDone: false,
-  onCancel: false,
-  x: false,
-  y: true
- })
-
-Vue.use(VueFuse)
+Vue.use(VueScrollTo)
 
 export default {
   name: 'azlist',
@@ -149,17 +150,25 @@ export default {
             'desc',
           ],
           matchAllTokens: true,
-          threshold: 0.1,
+          threshold: 0.2,
           tokenize: true, 
         },
         labels: {
           noResultsMsg: `Sorry, we couldn't find anything for that search. Please try different terms.`,
-          searchPlaceholder: 'Search services',
+          searchPlaceholder: 'Begin typing to filter results by title or description',
           defaultCheckboxLabel: 'All Services',
           filterByText: 'Filter by service category',
         },
         searchBox: true, //display search box
         searchValue: '',
+        scrollToSettings: {
+          container: "body",
+          duration: 1000,
+          easing: "ease",
+          offset: -70,
+          x: false,
+          y: true
+        }
       },
       alphabet: 'abcdefghijklmnopqrstuvwxyz',
       checkedItems: [],
@@ -167,7 +176,7 @@ export default {
       resultsList: [],
     }
   },
-  created() {
+  mounted() {
     deepMerge(this.options, this.propOptions)
     this.init()
   },
@@ -178,14 +187,9 @@ export default {
     }
   },
   methods: {
-    gettype(item) {
-      console.log(typeof item)
-    },
     init() {
-      
       this.resultsList = this.list
       this.updateResultsList()
-
     },
     hasResults() {
       
@@ -294,27 +298,11 @@ export default {
         return !this.resultsList.hasOwnProperty(letter)
       }
     },
+    getScrollToSettings(letter) {
+      return deepMerge({el: `#l-${letter}`}, this.options.scrollToSettings) 
+    }
   }
 }
 </script>
 
-<style lang="scss">
-  .checkboxes-filter {
-    li {
-      list-style-type: none;
-    }
-  }
-  .az-anchors {
-    ul {
-      list-style-type: none;
-      li {
-        display: inline-block;
-        margin: 0 2px;
-      }
-    }
-    a[disabled] {
-      pointer-events: none;
-      color: #f0f0f0;
-    }
-  }
-</style>
+<style lang="scss"></style>
