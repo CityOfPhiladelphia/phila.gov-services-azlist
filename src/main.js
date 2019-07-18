@@ -1,59 +1,59 @@
-import Vue from 'vue'
-import AzList from './AzList.vue'
-import axios from 'axios'
+import Vue from 'vue';
+import AzList from './AzList.vue';
+import axios from 'axios';
 
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 
 async function getAzListCategories() {
-  return axios.get('https://staging-www.phila.gov/wp-json/services/v1/categories').then((response) => {
-    return response.data
-  })
+  return axios.get(process.env.VUE_APP_CAT_API).then((response) => {
+    return response.data;
+  });
 }
 
 async function getAzList() {
-  return axios.get('https://staging-www.phila.gov/wp-json/services/v1/directory').then((response) => {
+  return axios.get(process.env.VUE_APP_DIR_API).then((response) => {
     return response.data.map((item) => {
 
       let categories = item.categories.map((cat) => {
         
         if (cat) {
-          return cat.slug
+          return cat.slug;
         }
 
-        return ''
+        return '';
         
-      })
+      });
 
       return {
         title: item.title,
         link: item.link,
         desc: item.desc,
-        categories
-      }
-    })
-  })
+        categories,
+      };
+    });
+  });
 }
 
 async function initAzList() {
 
-  const categories = await getAzListCategories()
-  const list = await getAzList()
+  const categories = await getAzListCategories();
+  const list = await getAzList();
 
   new Vue({
     render(h) {
       return h(AzList, {
         props: {
           categories,
-          list
+          list,
         },
-      })
+      });
     },
-  }).$mount('#app')
+  }).$mount('#vue-app');
 
 }
 
-initAzList()
+initAzList();
 
 
