@@ -1,4 +1,4 @@
-# azlist
+# Phila.gov Services Directory (AZList)
 
 ## Project setup
 ```
