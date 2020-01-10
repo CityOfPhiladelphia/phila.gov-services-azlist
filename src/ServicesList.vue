@@ -291,7 +291,7 @@ export default {
     },
     sortResultsListByLabel(list) {
       return list.sort((a, b) => {
-        if (a.title < b.title) {
+        if (a.title.toUpperCase() < b.title.toUpperCase()) {
           return -1;
         }
         if (a.title > b.title) {
@@ -307,7 +307,7 @@ export default {
       let numeric = {};
       
       list.forEach((item, index) => {
-        let letter = item.title.charAt(0);
+        let letter = item.title.charAt(0).toUpperCase();
         
         if (!combinedList.hasOwnProperty(letter)) {
           combinedList[letter] = [];
@@ -386,4 +386,10 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+
+#a-z-filter-list hr::after {
+  position: absolute;
+}
+
+</style>
