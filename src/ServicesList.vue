@@ -163,7 +163,7 @@ export default {
   name: 'Azlist',
   data() {
     return {
-      alphabet: 'abcdefghijklmnopqrstuvwxyz',
+      alphabet: 'abcdefghijklmnopqrstuvwxyz#',
       categories: [],
       checkedItems: [],
       defaultCheckboxChecked: true,
@@ -325,13 +325,13 @@ export default {
         if (isNaN(key)) {
           alpha[key] = combinedList[key];  
         } else {
-          numeric['N-' + key] = combinedList[key];  
+          numeric["#"] = combinedList[key];  
         }
       });
 
       deepMerge(alpha, numeric);
 
-      return alpha;
+      return alpha ;
 
     },
     filterCheckbox(list) {
@@ -379,6 +379,9 @@ export default {
       return letter;
     },
     getScrollToSettings(letter) {
+      if (letter === "#") {
+        return deepMerge({ el: "#l-\\#" }, this.options.scrollToSettings); 
+      }
       return deepMerge({ el: `#l-${letter}` }, this.options.scrollToSettings); 
     },
   },
