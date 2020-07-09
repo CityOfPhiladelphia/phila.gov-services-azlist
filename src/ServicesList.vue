@@ -172,14 +172,13 @@ export default {
         azAnchors: true, //display a-z anchors, azGroup must also be true
         azGroup: true, //group results by a-z
         fuseSearchOptions: {
-          defaultAll: false,
           keys: [
             'title',
             'desc',
           ],
-          matchAllTokens: true,
           threshold: 0.2,
           tokenize: true, 
+          shouldSort: true,
         },
         labels: {
           noResultsMsg: `Sorry, we couldn't find anything for that search. Please try different terms.`,
