@@ -177,7 +177,7 @@ export default {
             'desc',
           ],
           threshold: 0.2,
-          tokenize: true, 
+          // tokenize: true, 
           shouldSort: true,
         },
         labels: {
