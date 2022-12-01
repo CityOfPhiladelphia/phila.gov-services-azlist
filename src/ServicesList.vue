@@ -150,7 +150,7 @@ import Fuse from 'fuse.js';
 import axios from 'axios';
 
 Vue.prototype.$search = function (term, list, options) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve, _reject) {
     var run = new Fuse(list, options);
     var results = run.search(term);
     resolve(results);
@@ -216,7 +216,7 @@ export default {
       promises.push(this.getAzListCategories());
       promises.push(this.getAzList());
 
-      Promise.all(promises).then(values => {
+      Promise.all(promises).then(_values => {
         self.updateResultsList();
         this.loaded = true;
       });
@@ -304,7 +304,7 @@ export default {
       let alpha = {};
       let numeric = {};
       
-      list.forEach((item, index) => {
+      list.forEach((item, _index) => {
         let letter = item.title.charAt(0).toUpperCase();
         
         // if (!combinedList.hasOwnProperty(letter)) {
