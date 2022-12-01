@@ -307,7 +307,8 @@ export default {
       list.forEach((item, index) => {
         let letter = item.title.charAt(0).toUpperCase();
         
-        if (!combinedList.hasOwnProperty(letter)) {
+        // if (!combinedList.hasOwnProperty(letter)) {
+        if (!(letter in combinedList)) {
           combinedList[letter] = [];
           combinedList[letter].push(item);
         } else {
@@ -368,7 +369,8 @@ export default {
     },
     isLetterInResults(letter) {
       if (this.options.azAnchors && this.options.azGroup) {
-        return !this.resultsList.hasOwnProperty(letter);
+        // return !this.resultsList.hasOwnProperty(letter);
+        return !(letter in this.resultsList);
       }
     },
     numericLetterFilter(letter) {
