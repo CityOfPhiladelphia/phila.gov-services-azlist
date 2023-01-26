@@ -148,6 +148,7 @@ import VueScrollTo from 'vue-scrollto';
 import deepMerge from 'lodash/merge';
 import Fuse from 'fuse.js';
 import axios from 'axios';
+import { stringify } from 'querystring';
 
 Vue.prototype.$search = function (term, list, options) {
   return new Promise(function (resolve, reject) {
@@ -204,6 +205,9 @@ export default {
     alphabetLetters() {
       return this.alphabet.toUpperCase().split('');
     },
+    currentRouteName() {
+      return this.$route.path;
+    },
   },
   mounted() {
     deepMerge(this.options, this.propOptions);
@@ -229,6 +233,7 @@ export default {
     },
     getAzList() {
       let self = this;
+      console.log(self.currentRouteName);
       return axios.get(process.env.VUE_APP_DIR_API).then((response) => {
         self.list = response.data.map((item) => {
 
