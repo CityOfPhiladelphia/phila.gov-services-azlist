@@ -1,9 +1,21 @@
 import Vue from 'vue';
+import VueRouter from 'vue-router';
 import ServicesList from './ServicesList.vue';
 
 Vue.config.productionTip = false;
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/',
+      name: 'main',
+    },
+  ],
+});
 
 new Vue({
+  router,
   render(h) {
     return h(ServicesList);
   },
