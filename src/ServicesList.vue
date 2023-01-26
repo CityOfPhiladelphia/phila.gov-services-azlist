@@ -233,7 +233,7 @@ export default {
     },
     getAzList() {
       let self = this;
-      console.log(self.currentRouteName);
+      window.console.log(self.currentRouteName);
       return axios.get(process.env.VUE_APP_DIR_API).then((response) => {
         self.list = response.data.map((item) => {
 
