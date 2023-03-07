@@ -101,7 +101,7 @@
                           v-for="(listItem, index) in listValue"
                           :key="'g-' + letter + index"
                         >
-                          <a :href="listItem.link">
+                          <a :href="translateLink(listItem.link)">
                             {{ listItem.title }}
                           </a>
                           <p class="hide-for-small-only mbl">
@@ -119,7 +119,7 @@
                     v-for="(listItem, lIndex) in resultsList"
                     :key="'l-' + lIndex"
                   >
-                    <a :href="listItem.link">
+                    <a :href="translateLink(listItem.link)">
                       {{ listItem.title }}
                     </a>
                     <p class="hide-for-small-only mbl">
@@ -205,8 +205,29 @@ export default {
     alphabetLetters() {
       return this.alphabet.toUpperCase().split('');
     },
+
+    slug() {
+      let language = this.isTranslated(window.location.pathname);
+      if (language == '/es') {
+        return 'http://translated-endpoints-json.s3-website-us-east-1.amazonaws.com/departments-prod.json';
+      } else if (language == '/zh') {
+        return 'http://translated-endpoints-json.s3-website-us-east-1.amazonaws.com/departments-prod.json';
+      }
+      return process.env.VUE_APP_DIR_API;
+    },
+    
     currentRouteName() {
-      return this.$route.path;
+      return this.isTranslated(window.location.pathname);
+    },
+
+    categoriesSlug(){
+      let language = this.isTranslated(window.location.pathname);
+      if (language == '/es') {
+        return 'http://translated-endpoints-json.s3-website-us-east-1.amazonaws.com/departments-prod.json';
+      } else if (language == '/zh') {
+        return 'http://translated-endpoints-json.s3-website-us-east-1.amazonaws.com/departments-prod.json';
+      }
+      return process.env.VUE_APP_CAT_API;
     },
   },
   mounted() {
@@ -214,6 +235,22 @@ export default {
     this.init();
   },
   methods: {
+    isTranslated(path) {
+      let splitPath = path.split("/");
+      const langList = [ 'zh', 'es','ar', 'fr', 'ru', 'ms', 'hi', 'pt', 'bn', 'id', 'sw', 'ja', 'de', 'ko', 'it', 'fa', 'tr', 'nl', 'te', 'vi', 'ht' ];
+      for (let i = 0; i < splitPath.length; i++) {
+        if (langList.indexOf(splitPath[i]) > -1) {
+          return '/'+splitPath[i];
+        }
+      }
+      return null;
+    },
+    
+    translateLink(link) {
+      let self = this;
+      return self.currentRouteName ? self.currentRouteName+link : link;
+    },
+
     init() {
       let self = this;
       let promises = [];
@@ -227,14 +264,14 @@ export default {
     },
     getAzListCategories() {
       let self = this;
-      return axios.get(process.env.VUE_APP_CAT_API).then((response) => {
+      return axios.get(this.categoriesSlug).then((response) => {
         self.categories = response.data;
       });
     },
     getAzList() {
       let self = this;
       window.console.log(self.currentRouteName);
-      return axios.get(process.env.VUE_APP_DIR_API).then((response) => {
+      return axios.get(this.slug).then((response) => {
         self.list = response.data.map((item) => {
 
           let categories = item.categories.map((cat) => {
