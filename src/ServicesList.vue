@@ -209,9 +209,9 @@ export default {
     slug() {
       let language = this.isTranslated(window.location.pathname);
       if (language == '/es') {
-        return 'http://translated-endpoints-json.s3-website-us-east-1.amazonaws.com/departments-prod.json';
+        return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json';
       } else if (language == '/zh') {
-        return 'http://translated-endpoints-json.s3-website-us-east-1.amazonaws.com/departments-prod.json';
+        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_directory.json';
       }
       return process.env.VUE_APP_DIR_API;
     },
@@ -223,9 +223,9 @@ export default {
     categoriesSlug(){
       let language = this.isTranslated(window.location.pathname);
       if (language == '/es') {
-        return 'http://translated-endpoints-json.s3-website-us-east-1.amazonaws.com/departments-prod.json';
+        return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json';
       } else if (language == '/zh') {
-        return 'http://translated-endpoints-json.s3-website-us-east-1.amazonaws.com/departments-prod.json';
+        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_categories.json';
       }
       return process.env.VUE_APP_CAT_API;
     },
@@ -270,7 +270,6 @@ export default {
     },
     getAzList() {
       let self = this;
-      window.console.log(self.currentRouteName);
       return axios.get(this.slug).then((response) => {
         self.list = response.data.map((item) => {
 
