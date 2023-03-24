@@ -148,7 +148,6 @@ import VueScrollTo from 'vue-scrollto';
 import deepMerge from 'lodash/merge';
 import Fuse from 'fuse.js';
 import axios from 'axios';
-import { stringify } from 'querystring';
 import { loadLanguageAsync } from './i18n.js';
 
 
