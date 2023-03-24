@@ -149,6 +149,8 @@ import deepMerge from 'lodash/merge';
 import Fuse from 'fuse.js';
 import axios from 'axios';
 import { stringify } from 'querystring';
+import { loadLanguageAsync } from './i18n.js';
+
 
 Vue.prototype.$search = function (term, list, options) {
   return new Promise(function (resolve, reject) {
@@ -182,10 +184,10 @@ export default {
           shouldSort: true,
         },
         labels: {
-          noResultsMsg: `Sorry, we couldn't find anything for that search. Please try different terms.`,
-          searchPlaceholder: 'Begin typing to filter results by title or description',
-          defaultCheckboxLabel: 'All Services',
-          filterByText: 'Filter by service category',
+          noResultsMsg: `${this.$t("No results")}`,
+          searchPlaceholder: `${this.$t("Search bar")}`,
+          defaultCheckboxLabel: `${this.$t("All services")}`,
+          filterByText:`${this.$t("Filter by category")}`,
         },
         searchBox: true, //display search box
         searchValue: '',
@@ -206,11 +208,20 @@ export default {
       return this.alphabet.toUpperCase().split('');
     },
 
+    language() {
+      let lang = this.isTranslated(window.location.pathname);
+      if (lang =='/es') {
+        return 'es';
+      } else if (lang =='/zh') {
+        return 'zh';
+      }
+      return 'en';
+    },
+
     slug() {
-      let language = this.isTranslated(window.location.pathname);
-      if (language == '/es') {
+      if (this.language == 'es') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json';
-      } else if (language == '/zh') {
+      } else if (this.language == 'zh') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_directory.json';
       }
       return process.env.VUE_APP_DIR_API;
@@ -221,10 +232,9 @@ export default {
     },
 
     categoriesSlug(){
-      let language = this.isTranslated(window.location.pathname);
-      if (language == '/es') {
+      if (this.language == 'es') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json';
-      } else if (language == '/zh') {
+      } else if (this.language == 'zh') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_categories.json';
       }
       return process.env.VUE_APP_CAT_API;
@@ -233,6 +243,7 @@ export default {
   mounted() {
     deepMerge(this.options, this.propOptions);
     this.init();
+    loadLanguageAsync(this.language);
   },
   methods: {
     isTranslated(path) {
