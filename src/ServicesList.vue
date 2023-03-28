@@ -101,7 +101,7 @@
                           v-for="(listItem, index) in listValue"
                           :key="'g-' + letter + index"
                         >
-                          <a :href="listItem.link">
+                          <a :href="translateLink(listItem.link)">
                             {{ listItem.title }}
                           </a>
                           <p class="hide-for-small-only mbl">
@@ -119,7 +119,7 @@
                     v-for="(listItem, lIndex) in resultsList"
                     :key="'l-' + lIndex"
                   >
-                    <a :href="listItem.link">
+                    <a :href="translateLink(listItem.link)">
                       {{ listItem.title }}
                     </a>
                     <p class="hide-for-small-only mbl">
@@ -148,6 +148,8 @@ import VueScrollTo from 'vue-scrollto';
 import deepMerge from 'lodash/merge';
 import Fuse from 'fuse.js';
 import axios from 'axios';
+import { loadLanguageAsync } from './i18n.js';
+
 
 Vue.prototype.$search = function (term, list, options) {
   return new Promise(function (resolve, reject) {
@@ -181,10 +183,10 @@ export default {
           shouldSort: true,
         },
         labels: {
-          noResultsMsg: `Sorry, we couldn't find anything for that search. Please try different terms.`,
-          searchPlaceholder: 'Begin typing to filter results by title or description',
-          defaultCheckboxLabel: 'All Services',
-          filterByText: 'Filter by service category',
+          noResultsMsg: `${this.$t("No results")}`,
+          searchPlaceholder: `${this.$t("Search bar")}`,
+          defaultCheckboxLabel: `${this.$t("All services")}`,
+          filterByText:`${this.$t("Filter by category")}`,
         },
         searchBox: true, //display search box
         searchValue: '',
@@ -204,12 +206,61 @@ export default {
     alphabetLetters() {
       return this.alphabet.toUpperCase().split('');
     },
+
+    language() {
+      let lang = this.isTranslated(window.location.pathname);
+      if (lang =='/es') {
+        return 'es';
+      } else if (lang =='/zh') {
+        return 'zh';
+      }
+      return 'en';
+    },
+
+    slug() {
+      if (this.language == 'es') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json';
+      } else if (this.language == 'zh') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_directory.json';
+      }
+      return process.env.VUE_APP_DIR_API;
+    },
+    
+    currentRouteName() {
+      return this.isTranslated(window.location.pathname);
+    },
+
+    categoriesSlug(){
+      if (this.language == 'es') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json';
+      } else if (this.language == 'zh') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_categories.json';
+      }
+      return process.env.VUE_APP_CAT_API;
+    },
   },
   mounted() {
     deepMerge(this.options, this.propOptions);
     this.init();
+    loadLanguageAsync(this.language);
   },
   methods: {
+    isTranslated(path) {
+      let splitPath = path.split("/");
+      const langList = [ 'zh', 'es','ar', 'fr', 'ru', 'ms', 'hi', 'pt', 'bn', 'id', 'sw', 'ja', 'de', 'ko', 'it', 'fa', 'tr', 'nl', 'te', 'vi', 'ht' ];
+      for (let i = 0; i < splitPath.length; i++) {
+        if (langList.indexOf(splitPath[i]) > -1) {
+          return '/'+splitPath[i];
+        }
+      }
+      return null;
+    },
+    
+    translateLink(link) {
+      let self = this;
+      return self.currentRouteName ? self.currentRouteName+link : link;
+    },
+
     init() {
       let self = this;
       let promises = [];
@@ -223,13 +274,13 @@ export default {
     },
     getAzListCategories() {
       let self = this;
-      return axios.get(process.env.VUE_APP_CAT_API).then((response) => {
+      return axios.get(this.categoriesSlug).then((response) => {
         self.categories = response.data;
       });
     },
     getAzList() {
       let self = this;
-      return axios.get(process.env.VUE_APP_DIR_API).then((response) => {
+      return axios.get(this.slug).then((response) => {
         self.list = response.data.map((item) => {
 
           let categories = item.categories.map((cat) => {
