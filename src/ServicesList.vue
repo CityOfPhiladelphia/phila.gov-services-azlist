@@ -63,7 +63,7 @@
             >
           </div>
           <nav
-            v-if="options.azAnchors && options.azGroup"
+            v-if="options.azAnchors && options.azGroup && (this.language !== 'zh')"
             class="show-for-medium"
           >
             <ul class="inline-list mbm pan mln h4">
