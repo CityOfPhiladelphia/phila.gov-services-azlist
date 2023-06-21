@@ -41,4 +41,10 @@ const languages = {
     "All services": "所有服务",
     "No results": "抱歉，我们找不到任何与该搜索相关的内容。请尝试不同的术语。",
   },
+  'ar': {
+    "Filter by category": "التصفية حسب فئة الخدمة",
+    "Search bar": "ابدأ الكتابة لتصفية النتائج حسب العنوان أو الوصف",
+    "All services": "جميع الخدمات",
+    "No results": "جميع الخدمات",
+  },
 };
