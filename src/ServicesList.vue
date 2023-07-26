@@ -213,6 +213,8 @@ export default {
         return 'es';
       } else if (lang =='/zh') {
         return 'zh';
+      } else if (lang =='/ar') {
+        return 'ar';
       }
       return 'en';
     },
@@ -222,6 +224,8 @@ export default {
         return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json';
       } else if (this.language == 'zh') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_directory.json';
+      } else if (this.language == 'ar') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_directory.json';
       }
       return process.env.VUE_APP_DIR_API;
     },
@@ -235,6 +239,8 @@ export default {
         return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json';
       } else if (this.language == 'zh') {
         return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_categories.json';
+      } else if (this.language == 'ar') {
+        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_categories.json';
       }
       return process.env.VUE_APP_CAT_API;
     },
