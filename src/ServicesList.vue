@@ -63,7 +63,7 @@
             >
           </div>
           <nav
-            v-if="options.azAnchors && options.azGroup && (this.language !== 'zh')"
+            v-if="options.azAnchors && options.azGroup && (language !== 'zh')"
             class="show-for-medium"
           >
             <ul class="inline-list mbm pan mln h4">
@@ -209,23 +209,32 @@ export default {
 
     language() {
       let lang = this.isTranslated(window.location.pathname);
-      if (lang =='/es') {
-        return 'es';
-      } else if (lang =='/zh') {
-        return 'zh';
-      } else if (lang =='/ar') {
-        return 'ar';
-      }
-      return 'en';
+      const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
+      if (validLanguages.includes(lang)) {
+        return lang.substring(1); 
+      } 
+      return 'en'; 
     },
 
     slug() {
       if (this.language == 'es') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json';
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/phila_service_directory.json';
       } else if (this.language == 'zh') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_directory.json';
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/phila_service_directory.json';
       } else if (this.language == 'ar') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_directory.json';
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/phila_service_directory.json';
+      } else if (this.language == 'ht') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/phila_service_directory.json';
+      } else if (this.language == 'fr') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/fr/phila_service_directory.json';
+      } else if (this.language == 'sw') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/sw/phila_service_directory.json';
+      } else if (this.language == 'pt') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/pt/phila_service_directory.json';
+      } else if (this.language == 'ru') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/ru/phila_service_directory.json';
+      } else if (this.language == 'vi') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/vi/phila_service_directory.json';
       }
       return process.env.VUE_APP_DIR_API;
     },
@@ -236,11 +245,23 @@ export default {
 
     categoriesSlug(){
       if (this.language == 'es') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json';
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/phila_service_categories.json';
       } else if (this.language == 'zh') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_categories.json';
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/phila_service_categories.json';
       } else if (this.language == 'ar') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_categories.json';
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/phila_service_categories.json';
+      } else if (this.language == 'ht') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/phila_service_categories.json';
+      } else if (this.language == 'fr') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/fr/phila_service_categories.json';
+      } else if (this.language == 'sw') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/sw/phila_service_categories.json';
+      } else if (this.language == 'pt') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/pt/phila_service_categories.json';
+      } else if (this.language == 'ru') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/ru/phila_service_categories.json';
+      } else if (this.language == 'vi') {
+        return 'https://translated-endpoints-json-staging.s3.amazonaws.com/vi/phila_service_categories.json';
       }
       return process.env.VUE_APP_CAT_API;
     },
