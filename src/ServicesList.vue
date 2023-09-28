@@ -218,7 +218,7 @@ export default {
 
     slug() {
       const languageUrls = {
-        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/phila_service_directory.json',
+        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json',
         'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/phila_service_directory.json',
         'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/phila_service_directory.json',
         'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/phila_service_directory.json',
@@ -241,7 +241,7 @@ export default {
 
     categoriesSlug(){
       const languageUrls = {
-        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/phila_service_categories.json',
+        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json',
         'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/phila_service_categories.json',
         'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/phila_service_categories.json',
         'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/phila_service_categories.json',
@@ -277,7 +277,11 @@ export default {
     
     translateLink(link) {
       let self = this;
-      return self.currentRouteName ? self.currentRouteName+link : link;
+      var slug = "";
+      if (link.startsWith("https://www.phila.gov")) {
+        slug = link.slice("https://www.phila.gov".length);
+      }
+      return self.currentRouteName ? self.currentRouteName+slug : slug;
     },
 
     init() {
