@@ -277,7 +277,11 @@ export default {
     
     translateLink(link) {
       let self = this;
-      return self.currentRouteName ? self.currentRouteName+link : link;
+      var slug = "";
+      if (link.startsWith("https://www.phila.gov")) {
+        slug = link.slice("https://www.phila.gov".length);
+      }
+      return self.currentRouteName ? self.currentRouteName+slug : slug;
     },
 
     init() {
