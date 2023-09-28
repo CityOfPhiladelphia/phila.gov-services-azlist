@@ -218,7 +218,7 @@ export default {
 
     slug() {
       const languageUrls = {
-        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json',
+        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/phila_service_directory.json',
         'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/phila_service_directory.json',
         'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/phila_service_directory.json',
         'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/phila_service_directory.json',
@@ -241,7 +241,7 @@ export default {
 
     categoriesSlug(){
       const languageUrls = {
-        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json',
+        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/phila_service_categories.json',
         'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/phila_service_categories.json',
         'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/phila_service_categories.json',
         'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/phila_service_categories.json',
