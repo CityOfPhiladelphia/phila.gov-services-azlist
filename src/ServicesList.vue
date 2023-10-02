@@ -12,7 +12,7 @@
           data-desktop-filter-wrapper=""
         >
           <h2 class="h4 mtn">
-            {{ options.labels.filterByText }}
+            {{ $t("Filter by category") }}
           </h2> 
           <form>
             <ul class="no-bullet pan">
@@ -24,7 +24,7 @@
                   @change="uncheckAllCheckboxes();updateResultsList()"
                 >
                 <label for="all">
-                  {{ options.labels.defaultCheckboxLabel }}
+                  {{ $t("All services") }}
                 </label>
               </li>
               <li
@@ -57,13 +57,13 @@
               v-model="options.searchValue"
               class="search-field"
               type="text"
-              :placeholder="options.labels.searchPlaceholder"
+              :placeholder="$t('Search bar')"
               @keyup="updateResultsList()"
               @keydown.enter.prevent=""
             >
           </div>
           <nav
-            v-if="options.azAnchors && options.azGroup && (this.language !== 'zh')"
+            v-if="options.azAnchors && options.azGroup && (language !== 'zh')"
             class="show-for-medium"
           >
             <ul class="inline-list mbm pan mln h4">
@@ -131,7 +131,7 @@
             </template>
             <template v-else>
               <div class="nothing-found h3">
-                {{ options.labels.noResultsMsg }}
+                {{ $t("No results") }}
               </div>
             </template>
           </div>
@@ -182,12 +182,6 @@ export default {
           // tokenize: true, 
           shouldSort: true,
         },
-        labels: {
-          noResultsMsg: `${this.$t("No results")}`,
-          searchPlaceholder: `${this.$t("Search bar")}`,
-          defaultCheckboxLabel: `${this.$t("All services")}`,
-          filterByText:`${this.$t("Filter by category")}`,
-        },
         searchBox: true, //display search box
         searchValue: '',
         scrollToSettings: {
@@ -209,24 +203,29 @@ export default {
 
     language() {
       let lang = this.isTranslated(window.location.pathname);
-      if (lang =='/es') {
-        return 'es';
-      } else if (lang =='/zh') {
-        return 'zh';
-      } else if (lang =='/ar') {
-        return 'ar';
-      }
-      return 'en';
+      const validLanguages = [ '/es', '/zh', '/ar', '/ht', '/fr', '/sw', '/pt', '/ru', '/vi' ];
+      if (validLanguages.includes(lang)) {
+        return lang.substring(1); 
+      } 
+      return 'en'; 
     },
 
     slug() {
-      if (this.language == 'es') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json';
-      } else if (this.language == 'zh') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_directory.json';
-      } else if (this.language == 'ar') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_directory.json';
-      }
+      const languageUrls = {
+        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json',
+        'zh': 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_directory.json',
+        'ar': 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_directory.json',
+        'ht': 'https://translated-endpoints-json.s3.amazonaws.com/ht/phila_service_directory.json',
+        'fr': 'https://translated-endpoints-json.s3.amazonaws.com/fr/phila_service_directory.json',
+        'sw': 'https://translated-endpoints-json.s3.amazonaws.com/sw/phila_service_directory.json',
+        'pt': 'https://translated-endpoints-json.s3.amazonaws.com/pt/phila_service_directory.json',
+        'ru': 'https://translated-endpoints-json.s3.amazonaws.com/ru/phila_service_directory.json',
+        'vi': 'https://translated-endpoints-json.s3.amazonaws.com/vi/phila_service_directory.json',
+      };
+
+      if (languageUrls[this.language]) {
+        return languageUrls[this.language];
+      } 
       return process.env.VUE_APP_DIR_API;
     },
     
@@ -235,20 +234,28 @@ export default {
     },
 
     categoriesSlug(){
-      if (this.language == 'es') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json';
-      } else if (this.language == 'zh') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_categories.json';
-      } else if (this.language == 'ar') {
-        return 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_categories.json';
-      }
+      const languageUrls = {
+        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json',
+        'zh': 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_categories.json',
+        'ar': 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_categories.json',
+        'ht': 'https://translated-endpoints-json.s3.amazonaws.com/ht/phila_service_categories.json',
+        'fr': 'https://translated-endpoints-json.s3.amazonaws.com/fr/phila_service_categories.json',
+        'sw': 'https://translated-endpoints-json.s3.amazonaws.com/sw/phila_service_categories.json',
+        'pt': 'https://translated-endpoints-json.s3.amazonaws.com/pt/phila_service_categories.json',
+        'ru': 'https://translated-endpoints-json.s3.amazonaws.com/ru/phila_service_categories.json',
+        'vi': 'https://translated-endpoints-json.s3.amazonaws.com/vi/phila_service_categories.json',
+      };
+      
+      if (languageUrls[this.language]) {
+        return languageUrls[this.language];
+      } 
       return process.env.VUE_APP_CAT_API;
     },
   },
   mounted() {
     deepMerge(this.options, this.propOptions);
-    this.init();
     loadLanguageAsync(this.language);
+    this.init();
   },
   methods: {
     isTranslated(path) {
@@ -264,7 +271,11 @@ export default {
     
     translateLink(link) {
       let self = this;
-      return self.currentRouteName ? self.currentRouteName+link : link;
+      var slug = "";
+      if (link.startsWith("https://www.phila.gov")) {
+        slug = link.slice("https://www.phila.gov".length);
+      }
+      return self.currentRouteName ? self.currentRouteName+slug : slug;
     },
 
     init() {
@@ -288,16 +299,15 @@ export default {
       let self = this;
       return axios.get(this.slug).then((response) => {
         self.list = response.data.map((item) => {
-
-          let categories = item.categories.map((cat) => {
-            
-            if (cat) {
-              return cat.slug;
-            }
-
-            return '';
-            
-          });
+          var categories = [ "" ];
+          if(typeof item.categories !== 'string') {
+            categories = item.categories.map((cat) => {
+              if (cat) {
+                return cat.slug;
+              }
+              return '';
+            });
+          }
 
           return {
             title: item.title,
