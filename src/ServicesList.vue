@@ -12,7 +12,7 @@
           data-desktop-filter-wrapper=""
         >
           <h2 class="h4 mtn">
-            {{ options.labels.filterByText }}
+            {{ $t("Filter by category") }}
           </h2> 
           <form>
             <ul class="no-bullet pan">
@@ -24,7 +24,7 @@
                   @change="uncheckAllCheckboxes();updateResultsList()"
                 >
                 <label for="all">
-                  {{ options.labels.defaultCheckboxLabel }}
+                  {{ $t("All services") }}
                 </label>
               </li>
               <li
@@ -57,7 +57,7 @@
               v-model="options.searchValue"
               class="search-field"
               type="text"
-              :placeholder="options.labels.searchPlaceholder"
+              :placeholder="$t('Search bar')"
               @keyup="updateResultsList()"
               @keydown.enter.prevent=""
             >
@@ -131,7 +131,7 @@
             </template>
             <template v-else>
               <div class="nothing-found h3">
-                {{ options.labels.noResultsMsg }}
+                {{ $t("No results") }}
               </div>
             </template>
           </div>
@@ -181,12 +181,6 @@ export default {
           threshold: 0.2,
           // tokenize: true, 
           shouldSort: true,
-        },
-        labels: {
-          noResultsMsg: `${this.$t("No results")}`,
-          searchPlaceholder: `${this.$t("Search bar")}`,
-          defaultCheckboxLabel: `${this.$t("All services")}`,
-          filterByText:`${this.$t("Filter by category")}`,
         },
         searchBox: true, //display search box
         searchValue: '',
@@ -260,8 +254,8 @@ export default {
   },
   mounted() {
     deepMerge(this.options, this.propOptions);
-    this.init();
     loadLanguageAsync(this.language);
+    this.init();
   },
   methods: {
     isTranslated(path) {
@@ -305,16 +299,15 @@ export default {
       let self = this;
       return axios.get(this.slug).then((response) => {
         self.list = response.data.map((item) => {
-
-          let categories = item.categories.map((cat) => {
-            
-            if (cat) {
-              return cat.slug;
-            }
-
-            return '';
-            
-          });
+          var categories = [ "" ];
+          if(typeof item.categories !== 'string') {
+            categories = item.categories.map((cat) => {
+              if (cat) {
+                return cat.slug;
+              }
+              return '';
+            });
+          }
 
           return {
             title: item.title,
