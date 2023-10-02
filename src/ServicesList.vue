@@ -212,15 +212,15 @@ export default {
 
     slug() {
       const languageUrls = {
-        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/phila_service_directory.json',
-        'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/phila_service_directory.json',
-        'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/phila_service_directory.json',
-        'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/phila_service_directory.json',
-        'fr': 'https://translated-endpoints-json-staging.s3.amazonaws.com/fr/phila_service_directory.json',
-        'sw': 'https://translated-endpoints-json-staging.s3.amazonaws.com/sw/phila_service_directory.json',
-        'pt': 'https://translated-endpoints-json-staging.s3.amazonaws.com/pt/phila_service_directory.json',
-        'ru': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ru/phila_service_directory.json',
-        'vi': 'https://translated-endpoints-json-staging.s3.amazonaws.com/vi/phila_service_directory.json',
+        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json',
+        'zh': 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_directory.json',
+        'ar': 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_directory.json',
+        'ht': 'https://translated-endpoints-json.s3.amazonaws.com/ht/phila_service_directory.json',
+        'fr': 'https://translated-endpoints-json.s3.amazonaws.com/fr/phila_service_directory.json',
+        'sw': 'https://translated-endpoints-json.s3.amazonaws.com/sw/phila_service_directory.json',
+        'pt': 'https://translated-endpoints-json.s3.amazonaws.com/pt/phila_service_directory.json',
+        'ru': 'https://translated-endpoints-json.s3.amazonaws.com/ru/phila_service_directory.json',
+        'vi': 'https://translated-endpoints-json.s3.amazonaws.com/vi/phila_service_directory.json',
       };
 
       if (languageUrls[this.language]) {
@@ -235,15 +235,15 @@ export default {
 
     categoriesSlug(){
       const languageUrls = {
-        'es': 'https://translated-endpoints-json-staging.s3.amazonaws.com/es/phila_service_categories.json',
-        'zh': 'https://translated-endpoints-json-staging.s3.amazonaws.com/zh/phila_service_categories.json',
-        'ar': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ar/phila_service_categories.json',
-        'ht': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ht/phila_service_categories.json',
-        'fr': 'https://translated-endpoints-json-staging.s3.amazonaws.com/fr/phila_service_categories.json',
-        'sw': 'https://translated-endpoints-json-staging.s3.amazonaws.com/sw/phila_service_categories.json',
-        'pt': 'https://translated-endpoints-json-staging.s3.amazonaws.com/pt/phila_service_categories.json',
-        'ru': 'https://translated-endpoints-json-staging.s3.amazonaws.com/ru/phila_service_categories.json',
-        'vi': 'https://translated-endpoints-json-staging.s3.amazonaws.com/vi/phila_service_categories.json',
+        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json',
+        'zh': 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_categories.json',
+        'ar': 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_categories.json',
+        'ht': 'https://translated-endpoints-json.s3.amazonaws.com/ht/phila_service_categories.json',
+        'fr': 'https://translated-endpoints-json.s3.amazonaws.com/fr/phila_service_categories.json',
+        'sw': 'https://translated-endpoints-json.s3.amazonaws.com/sw/phila_service_categories.json',
+        'pt': 'https://translated-endpoints-json.s3.amazonaws.com/pt/phila_service_categories.json',
+        'ru': 'https://translated-endpoints-json.s3.amazonaws.com/ru/phila_service_categories.json',
+        'vi': 'https://translated-endpoints-json.s3.amazonaws.com/vi/phila_service_categories.json',
       };
       
       if (languageUrls[this.language]) {
