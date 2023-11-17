@@ -211,22 +211,13 @@ export default {
     },
 
     slug() {
-      const languageUrls = {
-        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_directory.json',
-        'zh': 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_directory.json',
-        'ar': 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_directory.json',
-        'ht': 'https://translated-endpoints-json.s3.amazonaws.com/ht/phila_service_directory.json',
-        'fr': 'https://translated-endpoints-json.s3.amazonaws.com/fr/phila_service_directory.json',
-        'sw': 'https://translated-endpoints-json.s3.amazonaws.com/sw/phila_service_directory.json',
-        'pt': 'https://translated-endpoints-json.s3.amazonaws.com/pt/phila_service_directory.json',
-        'ru': 'https://translated-endpoints-json.s3.amazonaws.com/ru/phila_service_directory.json',
-        'vi': 'https://translated-endpoints-json.s3.amazonaws.com/vi/phila_service_directory.json',
-      };
-
-      if (languageUrls[this.language]) {
-        return languageUrls[this.language];
-      } 
-      return process.env.VUE_APP_DIR_API;
+      let vm = this;
+      if (vm.language == 'en') {
+        return process.env.VUE_APP_DIR_API;
+      }
+      const languageCode = vm.language; 
+      const url = process.env.VUE_APP_BUCKET_URL + `${languageCode}/phila_service_directory.json`;
+      return url;
     },
     
     currentRouteName() {
@@ -234,22 +225,13 @@ export default {
     },
 
     categoriesSlug(){
-      const languageUrls = {
-        'es': 'https://translated-endpoints-json.s3.amazonaws.com/es/phila_service_categories.json',
-        'zh': 'https://translated-endpoints-json.s3.amazonaws.com/zh/phila_service_categories.json',
-        'ar': 'https://translated-endpoints-json.s3.amazonaws.com/ar/phila_service_categories.json',
-        'ht': 'https://translated-endpoints-json.s3.amazonaws.com/ht/phila_service_categories.json',
-        'fr': 'https://translated-endpoints-json.s3.amazonaws.com/fr/phila_service_categories.json',
-        'sw': 'https://translated-endpoints-json.s3.amazonaws.com/sw/phila_service_categories.json',
-        'pt': 'https://translated-endpoints-json.s3.amazonaws.com/pt/phila_service_categories.json',
-        'ru': 'https://translated-endpoints-json.s3.amazonaws.com/ru/phila_service_categories.json',
-        'vi': 'https://translated-endpoints-json.s3.amazonaws.com/vi/phila_service_categories.json',
-      };
-      
-      if (languageUrls[this.language]) {
-        return languageUrls[this.language];
-      } 
-      return process.env.VUE_APP_CAT_API;
+      let vm = this;
+      if (vm.language == 'en') {
+        return process.env.VUE_APP_CAT_API;
+      }
+      const languageCode = vm.language;
+      const url = process.env.VUE_APP_BUCKET_URL + `${languageCode}/phila_service_categories.json`;
+      return url;
     },
   },
   mounted() {
