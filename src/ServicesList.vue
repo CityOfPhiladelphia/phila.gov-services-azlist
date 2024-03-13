@@ -104,9 +104,10 @@
                           <a :href="translateLink(listItem.link)">
                             {{ listItem.title }}
                           </a>
-                          <p class="hide-for-small-only mbl">
-                            {{ listItem.desc }}
-                          </p>
+                          <p
+                            class="hide-for-small-only mbl"
+                            v-html="listItem.desc"
+                          />
                         </div>
                       </div>
                     </div>
@@ -122,9 +123,10 @@
                     <a :href="translateLink(listItem.link)">
                       {{ listItem.title }}
                     </a>
-                    <p class="hide-for-small-only mbl">
-                      {{ listItem.desc }}
-                    </p>
+                    <p
+                      class="hide-for-small-only mbl"
+                      v-html="listItem.desc"
+                    />
                   </div>
                 </div>
               </template>
