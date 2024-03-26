@@ -62,6 +62,33 @@
               @keydown.enter.prevent=""
             >
           </div>
+          <div class="filter-summary">
+            <span 
+              v-if="options.searchValue.length > 0 || checkedItems.length > 0"
+              class="result-summary"
+            >
+              Showing {{ totalResultsCount }} results out of {{ totalServicesCount }} in <b><em>Services</em></b><span v-if="options.searchValue.length > 0"> for <b><em>"{{ options.searchValue }}"</em></b></span>
+            </span>
+            <span v-if="checkedItems.length > 0">
+              <button 
+                v-for="item in checkedItems"
+                :key="item"
+                class="filter-button"
+                @click="clearFilter(item)"
+              >
+                {{ item }}
+                <i class="far fa-times" />
+              </button>
+            </span>
+            <span v-if="checkedItems.length > 0">
+              <input
+                type="submit"
+                class="clear-button"
+                value="Clear all"
+                @click="clearAllFilters()"
+              >
+            </span>
+          </div>
           <nav
             v-if="options.azAnchors && options.azGroup && (language !== 'zh')"
             class="show-for-medium"
@@ -81,7 +108,7 @@
                 </a>
               </li>
             </ul>
-          </nav>
+          </nav>          
           <div class="list">
             <template v-if="hasResults()">
               <template v-if="options.azGroup">
@@ -172,6 +199,7 @@ export default {
       checkedItems: [],
       defaultCheckboxChecked: true,
       loaded: false,
+      totalServicesCount: 0,
       options: {
         azAnchors: true, //display a-z anchors, azGroup must also be true
         azGroup: true, //group results by a-z
@@ -234,6 +262,18 @@ export default {
       const languageCode = vm.language;
       const url = process.env.VUE_APP_BUCKET_URL + `${languageCode}/phila_service_categories.json`;
       return url;
+    },
+    totalResultsCount() {
+      if (typeof this.resultsList === 'object') {
+        let totalCount = 0;
+        for (const key in this.resultsList) {
+          totalCount += this.resultsList[key].length;
+        }
+        return totalCount;
+      } else if (Array.isArray(this.resultsList)) {
+        return this.resultsList.length;
+      }
+      return 0;
     },
   },
   mounted() {
@@ -301,6 +341,7 @@ export default {
           };
         });
         self.resultsList = self.list;
+        self.totalServicesCount = self.list.length;
       });
     },
     hasResults() {
@@ -385,6 +426,25 @@ export default {
       return alpha ;
 
     },
+
+    clearFilter(item) {
+      if (this.checkedItems.includes(item)) {
+        this.checkedItems = this.checkedItems.filter(checkedItem => checkedItem !== item);
+      } 
+      this.updateResultsList();
+      this.updateRouterQuery('checkedItems', this.checkedItems);
+    },
+
+    clearAllFilters() {
+      this.checkedItems = [];
+      
+      this.options.searchValue = '';
+
+      this.defaultCheckboxChecked = true;
+
+      this.updateResultsList();
+    },
+
     filterCheckbox(list) {
       if (this.checkedItems.length > 0) {
         this.uncheckDefaultCheckbox();
@@ -408,6 +468,7 @@ export default {
           return results;
         });
       } 
+      this.showFilterSummary = false;
       return list;
       
     },
@@ -445,5 +506,36 @@ export default {
 #a-z-filter-list hr::after {
   position: absolute;
 }
+
+.filter-summary{
+  margin: 0px 0px 16px 0px;
+}
+
+.filter-button{
+  margin: 0px 8px 8px 0px;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #cfcfcf;
+  color: #333333;
+  line-height: normal;
+  text-transform: capitalize;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.result-summary {
+  margin-right: 8px;
+}
+
+.clear-button{
+  margin: 0px 8px 0px 8px;
+  border: none;
+  background-color: transparent;
+  color: #0f4d90;
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
 
 </style>
