@@ -63,11 +63,13 @@
             >
           </div>
           <div class="filter-summary">
-            <span 
-              v-if="options.searchValue.length > 0 || checkedItems.length > 0"
-              class="result-summary"
-            >
-              Showing {{ totalResultsCount }} results out of {{ totalServicesCount }} in <b><em>Services</em></b><span v-if="options.searchValue.length > 0"> for <b><em>"{{ options.searchValue }}"</em></b></span>
+            <span class="result-summary">
+              <span v-if="hasResults()">
+                Showing {{ totalResultsCount }} results out of {{ totalServicesCount }} records <span v-if="checkedItems.length > 0 || options.searchValue.length > 0"> for </span><span v-if="options.searchValue.length > 0"><b><em>"{{ options.searchValue }}"</em></b></span>
+              </span>
+              <span v-else>
+                No results for <b><em>"{{ options.searchValue }}"</em></b>
+              </span>  
             </span>
             <span v-if="checkedItems.length > 0">
               <button 
@@ -77,10 +79,10 @@
                 @click="clearFilter(item)"
               >
                 {{ item }}
-                <i class="far fa-times" />
+                <i class="fa-solid fa-xmark"></i>
               </button>
             </span>
-            <span v-if="checkedItems.length > 0">
+            <span v-if="checkedItems.length > 0 || options.searchValue.length > 0">
               <input
                 type="submit"
                 class="clear-button"
@@ -157,11 +159,6 @@
                   </div>
                 </div>
               </template>
-            </template>
-            <template v-else>
-              <div class="nothing-found h3">
-                {{ $t("No results") }}
-              </div>
             </template>
           </div>
         </div>
@@ -513,8 +510,9 @@ export default {
 
 .filter-button{
   margin: 0px 8px 8px 0px;
-  padding: 4px;
+  padding: 6px;
   border-radius: 4px;
+  border: 2px solid transparent;
   background-color: #cfcfcf;
   color: #333333;
   line-height: normal;
@@ -523,12 +521,15 @@ export default {
   cursor: pointer;
 }
 
+.filter-button:hover{
+  border-color: #2176d2;
+}
+
 .result-summary {
   margin-right: 8px;
 }
 
 .clear-button{
-  margin: 0px 8px 0px 8px;
   border: none;
   background-color: transparent;
   color: #0f4d90;
