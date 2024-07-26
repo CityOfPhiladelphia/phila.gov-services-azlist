@@ -63,14 +63,14 @@
             >
           </div>
           <div class="filter-summary">
-            <span class="result-summary">
+            <div class="result-summary">
               <span v-if="hasResults()">
                 Showing {{ totalResultsCount }} results <span v-if="checkedItems.length > 0 || options.searchValue.length > 0"> for </span><span v-if="options.searchValue.length > 0"><b><em>"{{ options.searchValue }}"</em></b></span>
               </span>
               <span v-else>
                 No results for <b><em>"{{ options.searchValue }}"</em></b>
               </span>  
-            </span>
+            </div>
             <span v-if="checkedItems.length > 0">
               <button 
                 v-for="item in checkedItems"
@@ -537,9 +537,11 @@ export default {
 
 .result-summary {
   margin-right: 8px;
+  margin-bottom: 8px;
 }
 
 .clear-button{
+  padding: 0;
   border: none;
   background-color: transparent;
   color: #0f4d90;
