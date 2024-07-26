@@ -65,7 +65,7 @@
           <div class="filter-summary">
             <span class="result-summary">
               <span v-if="hasResults()">
-                Showing {{ totalResultsCount }} results out of {{ totalServicesCount }} records <span v-if="checkedItems.length > 0 || options.searchValue.length > 0"> for </span><span v-if="options.searchValue.length > 0"><b><em>"{{ options.searchValue }}"</em></b></span>
+                Showing {{ totalResultsCount }} results <span v-if="checkedItems.length > 0 || options.searchValue.length > 0"> for </span><span v-if="options.searchValue.length > 0"><b><em>"{{ options.searchValue }}"</em></b></span>
               </span>
               <span v-else>
                 No results for <b><em>"{{ options.searchValue }}"</em></b>
@@ -90,6 +90,18 @@
                 @click="clearAllFilters()"
               >
             </span>
+            <div v-if="!hasResults()" class="helper-text">
+              There were no results found matching your search. Try adjusting your search settings.
+              <br>
+              <br>
+              Here are some options:
+              <ul>
+                <li>Use different or fewer search terms</li>
+                <li>Check your spelling</li>
+                <li>Remove or adjust any filters</li>
+              </ul>
+              Want to start over? Select Clear all to reset the search settings.
+            </div>
           </div>
           <nav
             v-if="options.azAnchors && options.azGroup && (language !== 'zh')"
@@ -536,6 +548,10 @@ export default {
   cursor: pointer;
   font-weight: 700;
   text-decoration: underline;
+}
+
+.helper-text{
+  margin-top: 16px;
 }
 
 
