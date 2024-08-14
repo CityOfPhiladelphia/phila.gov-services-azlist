@@ -63,7 +63,7 @@
             >
           </div>
           <div class="filter-summary">
-            <div class="result-summary">
+            <div>
               <span v-if="hasResults()">
                 Showing {{ totalResultsCount }} results <span v-if="checkedItems.length > 0 || options.searchValue.length > 0"> for </span><span v-if="options.searchValue.length > 0"><b><em>"{{ options.searchValue }}"</em></b></span>
               </span>
@@ -519,7 +519,7 @@ export default {
 }
 
 .filter-button{
-  margin: 0px 8px 8px 0px;
+  margin: 8px 8px 0 0;
   padding: 6px;
   border-radius: 4px;
   border: 2px solid transparent;
@@ -535,12 +535,8 @@ export default {
   border-color: #2176d2;
 }
 
-.result-summary {
-  margin-right: 8px;
-  margin-bottom: 8px;
-}
-
 .clear-button{
+  margin: 12px 0 0 8px;
   padding: 0;
   border: none;
   background-color: transparent;
