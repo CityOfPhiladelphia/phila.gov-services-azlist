@@ -70,6 +70,14 @@
               <span v-else>
                 No results for <b><em>"{{ options.searchValue }}"</em></b>
               </span>  
+              <span v-if="checkedItems.length == 0 && options.searchValue.length > 0">
+              <input
+                type="submit"
+                class="clear-button"
+                value="Clear all"
+                @click="clearAllFilters()"
+              >
+            </span>
             </div>
             <span v-if="checkedItems.length > 0">
               <button 
@@ -82,7 +90,7 @@
                 <i class="fa-solid fa-xmark"></i>
               </button>
             </span>
-            <span v-if="checkedItems.length > 0 || options.searchValue.length > 0">
+            <span v-if="checkedItems.length > 0">
               <input
                 type="submit"
                 class="clear-button"
@@ -91,16 +99,15 @@
               >
             </span>
             <div v-if="!hasResults()" class="helper-text">
-              There were no results found matching your search. Try adjusting your search settings.
+              Improve your search results by:
               <br>
               <br>
-              Here are some options:
               <ul>
                 <li>Use different or fewer search terms</li>
                 <li>Check your spelling</li>
                 <li>Remove or adjust any filters</li>
               </ul>
-              Want to start over? Select Clear all to reset the search settings.
+              Want to start over? Select “Clear all” to reset the search settings.
             </div>
           </div>
           <nav
@@ -520,7 +527,7 @@ export default {
 
 .filter-button{
   margin: 8px 8px 0 0;
-  padding: 6px;
+  padding: 4px;
   border-radius: 4px;
   border: 2px solid transparent;
   background-color: #cfcfcf;
@@ -535,6 +542,10 @@ export default {
   border-color: #2176d2;
 }
 
+.filter-button i{
+  margin-left: 4px;
+}
+
 .clear-button{
   margin: 12px 0 0 8px;
   padding: 0;
@@ -547,7 +558,9 @@ export default {
 }
 
 .helper-text{
-  margin-top: 16px;
+  background: rgba(150,201,255,.3);
+  padding: 32px;
+  margin-top: 2rem;
 }
 
 
