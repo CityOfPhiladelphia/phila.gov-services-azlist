@@ -51,7 +51,7 @@
         >
           <div
             v-if="options.searchBox"
-            class="search"
+            class="vue-search"
           >
             <input
               v-model="options.searchValue"
@@ -61,6 +61,63 @@
               @keyup="updateResultsList()"
               @keydown.enter.prevent=""
             >
+            <button v-if="options.searchValue" class="clear-search-btn" @click="clearAllFilters()">
+              <i class="fas fa-times" />
+            </button>
+            <button
+              class="search-submit"
+              @click="updateResultsList()"
+            >
+              <i class="fa-solid fa-magnifying-glass" />
+            </button>
+          </div>
+          <div class="filter-summary">
+            <div>
+              <span v-if="hasResults()">
+                Showing {{ totalResultsCount }} results <span v-if="checkedItems.length > 0 || options.searchValue.length > 0"> for </span><span v-if="options.searchValue.length > 0"><b><em>"{{ options.searchValue }}"</em></b></span>
+              </span>
+              <span v-else>
+                No results for <b><em>"{{ options.searchValue }}"</em></b>
+              </span>  
+              <span v-if="checkedItems.length == 0 && options.searchValue.length > 0">
+              <input
+                type="submit"
+                class="clear-button"
+                value="Clear all"
+                @click="clearAllFilters()"
+              >
+            </span>
+            </div>
+            <span v-if="checkedItems.length > 0">
+              <button 
+                v-for="item in checkedItems"
+                :key="item"
+                class="filter-button"
+                @click="clearFilter(item)"
+              >
+                {{ item }}
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </span>
+            <span v-if="checkedItems.length > 0">
+              <input
+                type="submit"
+                class="clear-button"
+                value="Clear all"
+                @click="clearAllFilters()"
+              >
+            </span>
+            <div v-if="!hasResults()" class="helper-text">
+              Improve your search results by:
+              <br>
+              <br>
+              <ul>
+                <li>Use different or fewer search terms</li>
+                <li>Check your spelling</li>
+                <li>Remove or adjust any filters</li>
+              </ul>
+              Want to start over? Select “Clear all” to reset the search settings.
+            </div>
           </div>
           <nav
             v-if="options.azAnchors && options.azGroup && (language !== 'zh')"
@@ -81,7 +138,7 @@
                 </a>
               </li>
             </ul>
-          </nav>
+          </nav>          
           <div class="list">
             <template v-if="hasResults()">
               <template v-if="options.azGroup">
@@ -131,11 +188,6 @@
                 </div>
               </template>
             </template>
-            <template v-else>
-              <div class="nothing-found h3">
-                {{ $t("No results") }}
-              </div>
-            </template>
           </div>
         </div>
       </template>
@@ -172,6 +224,7 @@ export default {
       checkedItems: [],
       defaultCheckboxChecked: true,
       loaded: false,
+      totalServicesCount: 0,
       options: {
         azAnchors: true, //display a-z anchors, azGroup must also be true
         azGroup: true, //group results by a-z
@@ -234,6 +287,18 @@ export default {
       const languageCode = vm.language;
       const url = process.env.VUE_APP_BUCKET_URL + `${languageCode}/phila_service_categories.json`;
       return url;
+    },
+    totalResultsCount() {
+      if (typeof this.resultsList === 'object') {
+        let totalCount = 0;
+        for (const key in this.resultsList) {
+          totalCount += this.resultsList[key].length;
+        }
+        return totalCount;
+      } else if (Array.isArray(this.resultsList)) {
+        return this.resultsList.length;
+      }
+      return 0;
     },
   },
   mounted() {
@@ -301,6 +366,7 @@ export default {
           };
         });
         self.resultsList = self.list;
+        self.totalServicesCount = self.list.length;
       });
     },
     hasResults() {
@@ -385,6 +451,25 @@ export default {
       return alpha ;
 
     },
+
+    clearFilter(item) {
+      if (this.checkedItems.includes(item)) {
+        this.checkedItems = this.checkedItems.filter(checkedItem => checkedItem !== item);
+      } 
+      this.updateResultsList();
+      this.updateRouterQuery('checkedItems', this.checkedItems);
+    },
+
+    clearAllFilters() {
+      this.checkedItems = [];
+      
+      this.options.searchValue = '';
+
+      this.defaultCheckboxChecked = true;
+
+      this.updateResultsList();
+    },
+
     filterCheckbox(list) {
       if (this.checkedItems.length > 0) {
         this.uncheckDefaultCheckbox();
@@ -408,6 +493,7 @@ export default {
           return results;
         });
       } 
+      this.showFilterSummary = false;
       return list;
       
     },
@@ -445,5 +531,90 @@ export default {
 #a-z-filter-list hr::after {
   position: absolute;
 }
+
+.vue-search {
+    position: relative;
+    display: flex;
+
+    .search-field{
+      min-height: 3.8rem;
+      border: 2px solid #0f4d90;
+      background: white;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      top:16px;
+      right: 70px;
+      padding: 0;
+      font-size: 20px;
+      background-color: #fff;
+      opacity: 0.8;
+      cursor: pointer;
+      color: rgba(60, 60, 60, 0.5);
+        &:hover {
+        background: transparent;
+        color: black;
+      }
+    }
+
+    .search-submit{ 
+      padding: 0.4rem;
+      font-size: 2rem;
+      font-weight: 400;
+      background: #0f4d90;
+      color: white;
+      width: 3.8rem;
+      height: 3.8rem;
+      cursor: pointer;
+    }
+
+    .fa-magnifying-glass{
+      font-weight: normal;
+    }
+  }
+
+.filter-summary{
+  margin: 0px 0px 16px 0px;
+}
+
+.filter-button{
+  margin: 8px 8px 0 0;
+  padding: 4px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-color: #cfcfcf;
+  color: #333333;
+  line-height: normal;
+  text-transform: capitalize;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.filter-button:hover{
+  border-color: #2176d2;
+}
+
+.filter-button i{
+  margin-left: 4px;
+}
+
+.clear-button{
+  margin: 12px 0 0 8px;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: #0f4d90;
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.helper-text{
+  background: rgba(150,201,255,.3);
+  padding: 32px;
+  margin-top: 2rem;
+}
+
 
 </style>
