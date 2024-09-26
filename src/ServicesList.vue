@@ -67,7 +67,7 @@
               <span v-if="hasResults()">
                 Showing {{ totalResultsCount }} results <span v-if="checkedItems.length > 0 || options.searchValue.length > 0"> for </span><span v-if="options.searchValue.length > 0"><b><em>"{{ options.searchValue }}"</em></b></span>
               </span>
-              <span v-else>
+              <span v-else class="search-term">
                 No results for <b><em>"{{ options.searchValue }}"</em></b>
               </span>  
               <span v-if="checkedItems.length == 0 && options.searchValue.length > 0">
@@ -86,7 +86,7 @@
                 class="filter-button"
                 @click="clearFilter(item)"
               >
-                {{ item }}
+                {{ getCategoryName(item) }}
                 <i class="fa-solid fa-xmark"></i>
               </button>
             </span>
@@ -98,14 +98,20 @@
                 @click="clearAllFilters()"
               >
             </span>
-            <div v-if="!hasResults()" class="helper-text">
+            <div 
+              v-if="!hasResults()" 
+              class="helper-text"
+            >
+              <strong>There are no matching results.</strong>
+              <br>
+              <br>
               Improve your search results by:
               <br>
               <br>
               <ul>
-                <li>Use different or fewer search terms</li>
-                <li>Check your spelling</li>
-                <li>Remove or adjust any filters</li>
+                <li>Using different or fewer search terms.</li>
+                <li>Checking your spelling.</li>
+                <li>Removing or adjusting any filters.</li>
               </ul>
               Want to start over? Select “Clear all” to reset the search settings.
             </div>
@@ -511,6 +517,12 @@ export default {
       }
       return deepMerge({ el: `#l-${letter}` }, this.options.scrollToSettings); 
     },
+
+    getCategoryName(slug) {
+      const category = this.categories.find(cat => cat.slug === slug);
+      return category ? category.name : slug;
+    },
+
   },
 };
 </script>
@@ -557,10 +569,15 @@ export default {
   text-decoration: underline;
 }
 
+.search-term {
+  margin-right: 8px;
+}
+
 .helper-text{
   background: rgba(150,201,255,.3);
   padding: 32px;
   margin-top: 2rem;
+  width: fit-content;
 }
 
 
