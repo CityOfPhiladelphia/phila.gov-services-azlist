@@ -249,7 +249,7 @@ export default {
           threshold: 0.2,
           tokenize: true, 
           shouldSort: true,
-          matchAllTokens: true,
+          // matchAllTokens: true,
         },
         searchBox: true, //display search box
         searchValue: '',
