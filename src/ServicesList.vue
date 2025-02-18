@@ -61,7 +61,11 @@
               @keyup="updateResultsList()"
               @keydown.enter.prevent=""
             >
-            <button v-if="options.searchValue" class="clear-search-btn" @click="clearAllFilters()">
+            <button
+              v-if="options.searchValue"
+              class="clear-search-btn"
+              @click="clearAllFilters()"
+            >
               <i class="fas fa-times" />
             </button>
             <button
@@ -76,17 +80,20 @@
               <span v-if="hasResults()">
                 Showing {{ totalResultsCount }} results <span v-if="checkedItems.length > 0 || options.searchValue.length > 0"> for </span><span v-if="options.searchValue.length > 0"><b><em>"{{ options.searchValue }}"</em></b></span>
               </span>
-              <span v-else class="search-term">
+              <span
+                v-else
+                class="search-term"
+              >
                 No results for <b><em>"{{ options.searchValue }}"</em></b>
               </span>  
               <span v-if="checkedItems.length == 0 && options.searchValue.length > 0">
-              <input
-                type="submit"
-                class="clear-button"
-                value="Clear all"
-                @click="clearAllFilters()"
-              >
-            </span>
+                <input
+                  type="submit"
+                  class="clear-button"
+                  value="Clear all"
+                  @click="clearAllFilters()"
+                >
+              </span>
             </div>
             <span v-if="checkedItems.length > 0">
               <button 
@@ -96,7 +103,7 @@
                 @click="clearFilter(item)"
               >
                 {{ getCategoryName(item) }}
-                <i class="fa-solid fa-xmark"></i>
+                <i class="fa-solid fa-xmark" />
               </button>
             </span>
             <span v-if="checkedItems.length > 0">
@@ -240,8 +247,9 @@ export default {
             'desc',
           ],
           threshold: 0.2,
-          // tokenize: true, 
+          tokenize: true, 
           shouldSort: true,
+          matchAllTokens: true,
         },
         searchBox: true, //display search box
         searchValue: '',
